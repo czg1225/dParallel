@@ -99,12 +99,17 @@ print("Response:",tokenizer.batch_decode(out[0][:, input_ids.shape[1]:], skip_sp
 print("NFE:",out[1])
 ```
 
+## ⚡ Evaluation:
+We provide evaluation scripts for the GSM8K, Minerva_MATH, HumanEval, and MBPP benchmarks. Although our approach does not rely on caching or sparse attention techniques, it is fully compatible with them and can achieve even greater speedups when combined.
+```bash
+sh eval.sh
+```
 
 ## 🔥 Training
 ### 1. Certainty-Forcing Distillation with LoRA:
 We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml).
 ```bash
-deepspeed --master_port 29501 --include localhost:0,1,2,3 llada_train.py
+deepspeed --master_port 29501 --include localhost:0,1,2,3,4,5,6,7 llada_train.py
 ```
 
 ### 2. LoRA Merge:
@@ -113,11 +118,6 @@ After training, merge the LoRA weights to get the dParallel-dLLM.
 python merge_lora.py
 ```
 
-## ⚡ Evaluation:
-We provide evaluation scripts for the GSM8K, Minerva_MATH, HumanEval, and MBPP benchmarks. Although our approach does not rely on caching or sparse attention techniques, it is fully compatible with them and can achieve even greater speedups when combined.
-```bash
-sh eval.sh
-```
 
 
 ## 📖 Experimental Results
