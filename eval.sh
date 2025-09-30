@@ -18,7 +18,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29600 eval_ll
 # dParallel
 CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29601 eval_llada.py --tasks ${task} --num_fewshot ${num_fewshot} \
 --confirm_run_unsafe_code --model llada_dist \
---model_args model_path='Zigeng/dParallel-LLaDA-8b-instruct',gen_length=${length},steps=${steps},block_length=${block_length},show_speed=True,threshold=0.5,task="gsm8k"
+--model_args model_path='Zigeng/dParallel-LLaDA-8B-instruct',gen_length=${length},steps=${steps},block_length=${block_length},show_speed=True,threshold=0.5,task="gsm8k"
 
 
 
@@ -38,7 +38,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29600 eval_ll
 # dParallel
 CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29601 eval_llada.py --tasks ${task} --num_fewshot ${num_fewshot} \
 --confirm_run_unsafe_code --model llada_dist \
---model_args model_path='Zigeng/dParallel-LLaDA-8b-instruct',gen_length=${length},steps=${steps},block_length=${block_length},show_speed=True,threshold=0.5,task="minerva_math"
+--model_args model_path='Zigeng/dParallel-LLaDA-8B-instruct',gen_length=${length},steps=${steps},block_length=${block_length},show_speed=True,threshold=0.5,task="minerva_math"
 
 
 
@@ -58,7 +58,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29600 eval_ll
 # dparallel
 CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29601 eval_llada.py --tasks ${task} --num_fewshot ${num_fewshot} \
 --confirm_run_unsafe_code --model llada_dist \
---model_args model_path='Zigeng/dParallel-LLaDA-8b-instruct',gen_length=${length},steps=${steps},block_length=${block_length},threshold=0.5,show_speed=True,task="humaneval" \
+--model_args model_path='Zigeng/dParallel-LLaDA-8B-instruct',gen_length=${length},steps=${steps},block_length=${block_length},threshold=0.5,show_speed=True,task="humaneval" \
 --output_path evals_results/parallel/humaneval-ns0-${length} --log_samples
 
 ## NOTICE: use postprocess for humaneval
@@ -84,7 +84,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29600 eval_ll
 # parallel
 CUDA_VISIBLE_DEVICES=0,1,2,3 accelerate launch --main_process_port 29601 eval_llada.py --tasks ${task} --num_fewshot ${num_fewshot} \
 --confirm_run_unsafe_code --model llada_dist \
---model_args model_path='Zigeng/dParallel-LLaDA-8b-instruct',gen_length=${length},steps=${steps},block_length=${block_length},threshold=0.45,show_speed=True,task="mbpp" \
+--model_args model_path='Zigeng/dParallel-LLaDA-8B-instruct',gen_length=${length},steps=${steps},block_length=${block_length},threshold=0.45,show_speed=True,task="mbpp" \
 --output_path evals_results/parallel/mbpp-ns0-${length} --log_samples
 
 ## NOTICE: use postprocess for mbpp

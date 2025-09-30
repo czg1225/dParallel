@@ -9,7 +9,7 @@
   <a href="https://github.com/czg1225/dParallel">
     <img src="https://img.shields.io/badge/Paper-Arxiv-darkred.svg" alt="Paper">
   </a>
-  <a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8b-instruct">
+  <a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">
     <img src="https://img.shields.io/badge/HuggingFace-Model-FFB000.svg" alt="Project">
   </a>
   <a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
@@ -50,12 +50,12 @@ We introduce dParallel, a simple and effective method that unlocks the inherent 
     </tr>
     <tr>
       <td>🤖 <strong>Model</strong></td>
-      <td><a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8b-instruct">dParallel-LLaDA-8b-instruct</a></td>
+      <td><a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">dParallel-LLaDA-8b-instruct</a></td>
     </tr>
     <tr>
       <td>📊 <strong>Data</strong></td>
       <td><a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
-Distillation Data</a></td>
+dParallel-LLaDA-Distill Dataset</a></td>
     </tr>
   </tbody>
 </table>
@@ -80,8 +80,8 @@ from generate import generate
 import torch
 
 device = 'cuda'
-model = LLaDAModelLM.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
-tokenizer = AutoTokenizer.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True)
+model = LLaDAModelLM.from_pretrained('Zigeng/dParallel-LLaDA-8B-instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
+tokenizer = AutoTokenizer.from_pretrained('Zigeng/dParallel-LLaDA-8B-instruct', trust_remote_code=True)
 
 prompt = "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May? Please reason step by step, and put your final answer within \\boxed{}."
 

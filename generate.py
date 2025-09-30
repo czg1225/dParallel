@@ -312,8 +312,8 @@ def generate_with_dual_cache(model, prompt, steps=128, gen_length=128, block_len
 def main():
     device = 'cuda'
 
-    model = LLaDAModelLM.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
-    tokenizer = AutoTokenizer.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True)
+    model = LLaDAModelLM.from_pretrained('Zigeng/dParallel-LLaDA-8B-instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
+    tokenizer = AutoTokenizer.from_pretrained('Zigeng/dParallel-LLaDA-8B-instruct', trust_remote_code=True)
 
     prompt = "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May? Please reason step by step, and put your final answer within \\boxed{}."
 
