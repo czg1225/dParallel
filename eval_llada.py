@@ -33,7 +33,7 @@ from lm_eval.api.registry import register_model
 from tqdm import tqdm
 import os
 from transformers import AutoTokenizer, AutoModel, AutoConfig
-from generate import generate, generate_with_prefix_cache, generate_with_dual_cache, generate_window
+from generate import generate, generate_with_prefix_cache, generate_with_dual_cache
 from model.modeling_llada import LLaDAModelLM
 import json
 import time
@@ -325,9 +325,6 @@ class LLaDAEvalHarness(LM):
             else:
                 user_input = question
                 input_ids = self.tokenizer(user_input)['input_ids']
-            
-            # user_input = question
-            # input_ids = self.tokenizer(user_input)['input_ids']
 
         
             stop_tokens = req.args[1]['until']
@@ -367,7 +364,6 @@ class LLaDAEvalHarness(LM):
                     f.write(json.dumps(generated_answer, ensure_ascii=False) + '\n')
 
             end_time = time.time()
-
             run_time += end_time - start_time
             
             print('=' * 20)

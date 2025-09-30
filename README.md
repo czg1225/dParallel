@@ -9,10 +9,10 @@
   <a href="https://github.com/czg1225/dParallel">
     <img src="https://img.shields.io/badge/Paper-Arxiv-darkred.svg" alt="Paper">
   </a>
-  <a href="https://huggingface.co/Zigeng/R1-VeriThinker-7B">
+  <a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8b-instruct">
     <img src="https://img.shields.io/badge/HuggingFace-Model-FFB000.svg" alt="Project">
   </a>
-  <a href="https://huggingface.co/datasets/Zigeng/CoT-Veirification-340k">
+  <a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
     <img src="https://img.shields.io/badge/HuggingFace-Data-FFB000.svg" alt="Project">
   </a>
 </div>
@@ -50,11 +50,11 @@ We introduce dParallel, a simple and effective method that unlocks the inherent 
     </tr>
     <tr>
       <td>🤖 <strong>Model</strong></td>
-      <td><a href="https://huggingface.co/Zigeng/R1-VeriThinker-7B">dParallel-LLaDA-8b-instruct</a></td>
+      <td><a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8b-instruct">dParallel-LLaDA-8b-instruct</a></td>
     </tr>
     <tr>
       <td>📊 <strong>Data</strong></td>
-      <td><a href="https://huggingface.co/datasets/Zigeng/CoT-Veirification-340k">
+      <td><a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
 Distillation Data</a></td>
     </tr>
   </tbody>
@@ -74,16 +74,17 @@ pip3 install -r requirements.txt
 
 ## 🚀 Quick Start:
 ```python
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer
+from model.modeling_llada import LLaDAModelLM
 from generate import generate
+import torch
 
 device = 'cuda'
-model = AutoModel.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
+model = LLaDAModelLM.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
 tokenizer = AutoTokenizer.from_pretrained('Zigeng/dParallel-LLaDA-8b-instruct', trust_remote_code=True)
 
 prompt = "Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May? Please reason step by step, and put your final answer within \\boxed{}."
 
-# Add special tokens for the Instruct model. The Base model does not require the following two lines.
 m = [{"role": "user", "content": prompt}, ]
 prompt = tokenizer.apply_chat_template(m, add_generation_prompt=True, tokenize=False)
 
@@ -100,7 +101,7 @@ print("NFE:",out[1])
 ### 1. Certainty-Forcing Distillation with LoRA:
 We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml).
 ```bash
-deepspeed --include localhost:0,1,2,3,4,5,6,7 llada_train.py
+deepspeed --master_port 29501 --include localhost:0,1,2,3 llada_train.py
 ```
 
 ### 2. LoRA Merge:

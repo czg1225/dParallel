@@ -13,10 +13,6 @@ from peft import (
 )
 import deepspeed
 from typing import Dict, Any
-import numpy as np
-import torch.nn as nn
-import torch.utils.checkpoint as checkpoint
-import types
 import random
 
 
@@ -280,11 +276,7 @@ def main():
     model, tokenizer = prepare_model(config)
     
     # 3. Load the original dataset
-    dataset = load_dataset(
-        "json", 
-        data_files="data/llada_train_data_numi_tail.json", 
-        split="train"
-    )
+    dataset = load_dataset("Zigeng/dParallel_LLaDA_Distill_Data",split="train")
 
     # 4. Format each sample, generate the complete text and record the number of tokens in the prompt section
     def format_example(example):
@@ -342,14 +334,13 @@ def main():
     @dataclass
     class MaskDiffusionDataCollator:
         tokenizer: Any
-        pad_to_max_length: bool = False  
         max_length: int = 384  
         
         def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
             input_ids = [torch.tensor(f["input_ids"]) for f in features]
             prompt_lengths = [f["prompt_lengths"] for f in features]
             
-            target_length = max_length
+            target_length = self.max_length
             
             pad_token_id = self.tokenizer.eos_token_id
             
@@ -378,7 +369,6 @@ def main():
 
     data_collator_fixed = MaskDiffusionDataCollator(
         tokenizer=tokenizer,
-        pad_to_max_length=True,
         max_length=384
     )
 
