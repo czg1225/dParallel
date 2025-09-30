@@ -107,7 +107,7 @@ sh eval.sh
 
 ## 🔥 Training
 ### 1. Certainty-Forcing Distillation with LoRA:
-We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml).
+We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml). The training can be completed with 24 GB memory GPUs.
 ```bash
 deepspeed --master_port 29501 --include localhost:0,1,2,3,4,5,6,7 llada_train.py
 ```
