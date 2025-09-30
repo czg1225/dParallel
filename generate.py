@@ -326,7 +326,7 @@ def main():
 
     out = generate(model, input_ids, steps=256, gen_length=256, block_length=32, temperature=0., threshold=0.5,remasking='low_confidence')
     print(tokenizer.batch_decode(out[0][:, input_ids.shape[1]:], skip_special_tokens=True)[0])
-    print("NFE:",out[1])
+    print("Decoding Steps:",out[1])
     
 
 
