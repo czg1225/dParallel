@@ -98,7 +98,7 @@ print("NFE:",out[1])
 
 ## 🔥 Training
 ### 1. Certainty-Forcing Distillation with LoRA:
-We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/VeriThinker/blob/main/config/config_lora_r1_7b.yaml).
+We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml).
 ```bash
 deepspeed --include localhost:0,1,2,3,4,5,6,7 llada_train.py
 ```
@@ -110,31 +110,26 @@ python merge_lora.py
 ```
 
 ## ⚡ Evaluation:
-We provide evaluation scripts for GSM8K, Minerva_MATH, HumanEval and MBPP benchmarks. 
+We provide evaluation scripts for the GSM8K, Minerva_MATH, HumanEval, and MBPP benchmarks. Although our approach does not rely on caching or sparse attention techniques, it is fully compatible with them and can achieve even greater speedups when combined.
 ```bash
 sh eval.sh
 ```
 
 
 ## 📖 Experimental Results
-### CoT Compression Results:
-![CoT Compression](assets/cot-compression.png)
+### Results on LLaDA-8B-Instruct:
+![llada-exp](assets/llada_exp.png)
 
-### CoT Correctness Verification Results:
-![CoT Correctness](assets/cot-correctness.png)
+### Results on Dream-7B-Instruct:
+![dream-exp](assets/dream_exp.png)
 
-### Speculative Reasoning Results:
-Speculative reasoning results on three reasoning models. When using Qwen-2.5-Math-Instruct-7B as the draft model, most problems in MATH500 and GSM8K can be solved with short CoT model, while only a few (around 10%) require activation of the long CoT model for more complex solutions.
-![CoT Speculative1](assets/cot-spec1.png)
-![CoT Speculative2](assets/cot-spec2.png)
+### Better Speed-Accuracy Trade-off:
+![trade-off](assets/trade-off.png)
+
+## ☀️ Acknowledgement
+Our code builds on [LLaDA](https://github.com/ML-GSAI/LLaDA), [Dream](https://github.com/DreamLM/Dream), [Fast-dLLM](https://github.com/NVlabs/Fast-dLLM/tree/main), and [dKV-Cache](https://github.com/horseee/dkv-cache), and we acknowledge these great works for laying the groundwork that made our approach possible.
 
 ## Citation
 If our research assists your work, please give us a star ⭐ or cite us using:
 ```
-@article{chen2025verithinker,
-  title={VeriThinker: Learning to Verify Makes Reasoning Model Efficient},
-  author={Chen, Zigeng and Ma, Xinyin and Fang, Gongfan and Yu, Ruonan and Wang, Xinchao},
-  journal={Advances in Neural Information Processing Systems},
-  year={2025}
-}
 ```
