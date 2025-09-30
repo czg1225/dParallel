@@ -100,7 +100,7 @@ print("NFE:",out[1])
 ```
 
 ## ⚡ Evaluation:
-We provide evaluation scripts for the GSM8K, Minerva_MATH, HumanEval, and MBPP benchmarks. Although our approach does not rely on caching or sparse attention techniques, it is fully compatible with them and can achieve even greater speedups when combined.
+We provide evaluation scripts covering GSM8K, Minerva_MATH, HumanEval, and MBPP benchmarks. Importantly, both our reported results and the accompanying code are obtained without using caching or sparse attention techniques. Nevertheless, our method is fully compatible with these optimizations, and integrating them can yield even greater speedups.
 ```bash
 sh eval.sh
 ```
