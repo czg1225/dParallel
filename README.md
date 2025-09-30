@@ -18,7 +18,7 @@
 </div>
 </div>
 
-https://github.com/user-attachments/assets/4e384073-90e3-4d92-9960-67f4b3523b94
+https://github.com/user-attachments/assets/89d81255-9cd8-46d1-886e-0733938e5328
 
 > **dParallel: Learnable Parallel Decoding for dLLMs**   
 > [Zigeng Chen](https://github.com/czg1225), [Gongfan Fang](https://fangggf.github.io/), [Xinyin Ma](https://horseee.github.io/), [Ruonan Yu](https://scholar.google.com/citations?user=UHP95egAAAAJ&hl=en), [Xinchao Wang](https://sites.google.com/site/sitexinchaowang/)   
@@ -64,7 +64,7 @@ dParallel-LLaDA-Distill Dataset</a></td>
 </table>
 
 ## 🔥Updates
-* 🔥 **[Oct 2, 2025]**: Our arxiv paper is available.
+* 🔥 **[Oct 1, 2025]**: Our arxiv paper is available.
 * 🔥 **[Oct 1, 2025]**: Code, model and dataset are released.
 
 ## 🔧  Installation:
