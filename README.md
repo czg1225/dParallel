@@ -6,7 +6,7 @@
   <a href="https://opensource.org/license/mit-0">
     <img alt="MIT" src="https://img.shields.io/badge/License-MIT-4E94CE.svg">
   </a>
-  <a href="https://github.com/czg1225/dParallel">
+  <a href="https://arxiv.org/pdf/2509.26488">
     <img src="https://img.shields.io/badge/Paper-Arxiv-darkred.svg" alt="Paper">
   </a>
   <a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">
@@ -49,7 +49,7 @@ We introduce dParallel, a simple and effective method that unlocks the inherent 
   <tbody>
     <tr>
       <td>📄 <strong>Paper</strong></td>
-      <td><a href="https://github.com/czg1225/dParallel">ArXiv-Link</a></td>
+      <td><a href="https://arxiv.org/pdf/2509.26488">ArXiv-Link</a></td>
     </tr>
     <tr>
       <td>🤖 <strong>Model</strong></td>
