@@ -136,13 +136,10 @@ Our code builds on [LLaDA](https://github.com/ML-GSAI/LLaDA), [Dream](https://gi
 ## Citation
 If our research assists your work, please give us a star ⭐ or cite us using:
 ```
-@misc{chen2025dparallellearnableparalleldecoding,
-      title={dParallel: Learnable Parallel Decoding for dLLMs}, 
-      author={Zigeng Chen and Gongfan Fang and Xinyin Ma and Ruonan Yu and Xinchao Wang},
-      year={2025},
-      eprint={2509.26488},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2509.26488}, 
+@article{chen2025dparallel,
+  title={dParallel: Learnable Parallel Decoding for dLLMs},
+  author={Chen, Zigeng and Fang, Gongfan and Ma, Xinyin and Yu, Ruonan and Wang, Xinchao},
+  journal={arXiv preprint arXiv:2509.26488},
+  year={2025}
 }
 ```
