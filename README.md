@@ -87,6 +87,7 @@ pip3 install -r requirements.txt
 
 ## 🚀 Quick Start:
 ```python
+# cd LLaDA
 from transformers import AutoTokenizer
 from model.modeling_llada import LLaDAModelLM
 from generate import generate
