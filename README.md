@@ -10,10 +10,17 @@
     <img src="https://img.shields.io/badge/Paper-Arxiv-darkred.svg" alt="Paper">
   </a>
   <a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">
-    <img src="https://img.shields.io/badge/HuggingFace-Model-FFB000.svg" alt="Project">
+    <img src="https://img.shields.io/badge/HF-LLaDA Model-FFB000.svg" alt="Project">
+  </a>
+  </a>
+  <a href="https://huggingface.co/Zigeng/dParallel_Dream_7B_Instruct">
+    <img src="https://img.shields.io/badge/HF-Dream Model-FFB000.svg" alt="Project">
   </a>
   <a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
-    <img src="https://img.shields.io/badge/HuggingFace-Data-FFB000.svg" alt="Project">
+    <img src="https://img.shields.io/badge/HF-LLaDA Data-FFB000.svg" alt="Project">
+  </a>
+  <a href="https://huggingface.co/datasets/Zigeng/dParallel_Dream_Distill_Data">
+    <img src="https://img.shields.io/badge/HF-Dream Data-FFB000.svg" alt="Project">
   </a>
 </div>
 </div>
@@ -52,13 +59,22 @@ We introduce dParallel, a simple and effective method that unlocks the inherent 
       <td><a href="https://arxiv.org/pdf/2509.26488">ArXiv-Link</a></td>
     </tr>
     <tr>
-      <td>🤖 <strong>Model</strong></td>
-      <td><a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">dParallel-LLaDA-8b-instruct</a></td>
+      <td>🤖 <strong>LLaDA Model</strong></td>
+      <td><a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">dParallel-LLaDA-8B-instruct</a></td>
     </tr>
     <tr>
-      <td>📊 <strong>Data</strong></td>
+      <td>🤖 <strong>Dream Model</strong></td>
+      <td><a href="https://huggingface.co/Zigeng/dParallel_Dream_7B_Instruct">dParallel-Dream-7B-instruct</a></td>
+    </tr>
+    <tr>
+      <td>📊 <strong>LLaDA Data</strong></td>
       <td><a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
 dParallel-LLaDA-Distill Dataset</a></td>
+    </tr>
+    <tr>
+      <td>📊 <strong>Dream Data</strong></td>
+      <td><a href="https://huggingface.co/datasets/Zigeng/dParallel_Dream_Distill_Data">
+dParallel-Dream-Distill Dataset</a></td>
     </tr>
   </tbody>
 </table>
@@ -101,20 +117,46 @@ print("NFE:",out[1])
 
 ## ⚡ Evaluation:
 We provide evaluation scripts covering GSM8K, Minerva_MATH, HumanEval, and MBPP benchmarks. Importantly, both our reported results and the accompanying code are obtained without using caching or sparse attention techniques. Nevertheless, our method is fully compatible with these optimizations, and integrating them can yield even greater speedups.
+
+For dParallel LLaDA Evaluation:
 ```bash
+cd LLaDA
+sh eval.sh
+```
+
+For dParallel Dream Evaluation:
+```bash
+cd Dream/eval_instruct
 sh eval.sh
 ```
 
 ## 🔥 Training
 ### 1. Certainty-Forcing Distillation with LoRA:
-We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml). The training can be completed with 24 GB memory GPUs.
+We provide training scripts for our proposed Certainty-Forcing Distillation process. The implementation utilizes LoRA during the training process, with the configuration details specified in [config_lora_llada.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml) and [config_lora_dream.yaml](https://github.com/czg1225/dParallel/blob/master/configs/config_lora_llada.yaml). The training can be completed with 24 GB memory GPUs.
+
+For LLaDA Distillation:
 ```python
+cd LLaDA
 deepspeed --master_port 29501 --include localhost:0,1,2,3,4,5,6,7 llada_train.py
+```
+
+For Dream Distillation:
+```python
+cd Dream
+deepspeed --master_port 29501 --include localhost:0,1,2,3,4,5,6,7 dream_train.py
 ```
 
 ### 2. LoRA Merge:
 After training, merge the LoRA weights to get the dParallel-dLLM.
+
+For LLaDA Model:
 ```python
+cd LLaDA
+python merge_lora.py
+```
+For Dream Model:
+```python
+cd Dream
 python merge_lora.py
 ```
 
@@ -136,13 +178,10 @@ Our code builds on [LLaDA](https://github.com/ML-GSAI/LLaDA), [Dream](https://gi
 ## Citation
 If our research assists your work, please give us a star ⭐ or cite us using:
 ```
-@misc{chen2025dparallellearnableparalleldecoding,
-      title={dParallel: Learnable Parallel Decoding for dLLMs}, 
-      author={Zigeng Chen and Gongfan Fang and Xinyin Ma and Ruonan Yu and Xinchao Wang},
-      year={2025},
-      eprint={2509.26488},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2509.26488}, 
+@article{chen2025dparallel,
+  title={dParallel: Learnable Parallel Decoding for dLLMs},
+  author={Chen, Zigeng and Fang, Gongfan and Ma, Xinyin and Yu, Ruonan and Wang, Xinchao},
+  journal={arXiv preprint arXiv:2509.26488},
+  year={2025}
 }
 ```

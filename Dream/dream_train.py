@@ -13,7 +13,6 @@ from peft import (
 )
 import deepspeed
 from typing import Dict, Any
-import random
 
 
 def load_config(config_path: str) -> Dict[str, Any]:
@@ -88,8 +87,7 @@ def prepare_model(config: Dict[str, Any]):
     return model, tokenizer
 
 
-def forward_process_semi_ar(input_ids, prompt_lengths, mask_token_id=126336, block_size=32, eps=1e-3):
-    """Semi-autoregressive forward masking process"""
+def forward_process_semi_ar(input_ids, prompt_lengths, mask_token_id=151666, eps=1e-3):
     b, l = input_ids.shape
     device = input_ids.device
     
@@ -98,34 +96,23 @@ def forward_process_semi_ar(input_ids, prompt_lengths, mask_token_id=126336, blo
     masked_indices = torch.zeros_like(input_ids, dtype=torch.bool)
     masked_indices_rev = torch.zeros_like(input_ids, dtype=torch.bool)
 
-    # prompt mask
     token_positions = torch.arange(l, device=device).expand(b, l)
     prompt_mask = token_positions < prompt_lengths.unsqueeze(1)
-    
 
     noisy_batch[prompt_mask] = input_ids[prompt_mask]
     noisy_batch_rev[prompt_mask] = input_ids[prompt_mask]
     
-    # semi-autoregressive mask
     for i in range(b):
         prompt_len = prompt_lengths[i].item()
         response_len = l - prompt_len
         
         if response_len > 0:
+            
+            mask_start = prompt_len
+            mask_end = l
 
-            max_blocks = response_len // block_size
-            
-            num_blocks_to_mask = random.randint(0, max_blocks)
-            num_tokens_to_mask = num_blocks_to_mask * block_size
-            
-            mask_start = prompt_len + num_tokens_to_mask
-            if num_blocks_to_mask == max_blocks:
-                mask_end = l
-            else:
-                mask_end = mask_start + block_size
-            
             # t = torch.rand(b, device=input_ids.device)
-            t = torch.full((b,), 0.5, device=input_ids.device)  # 50% mask ratio
+            t = torch.full((b,), 0.5, device=input_ids.device)  
             p_mask = (1 - eps) * t + eps
             seg_len = mask_end - mask_start
             p_mask = p_mask[:, None].repeat(1, seg_len)
@@ -133,43 +120,45 @@ def forward_process_semi_ar(input_ids, prompt_lengths, mask_token_id=126336, blo
             masked_indices[:, mask_start:mask_end] = seg_mask
             masked_indices_rev[:, mask_start:mask_end] = ~seg_mask
             
-            noisy_batch = torch.where(masked_indices, 126336, input_ids)
+            noisy_batch = torch.where(masked_indices, 151666, input_ids)
             noisy_batch[i, mask_end:l] = mask_token_id
 
-            noisy_batch_rev = torch.where(masked_indices_rev, 126336, input_ids)
+            noisy_batch_rev = torch.where(masked_indices_rev, 151666, input_ids)
             noisy_batch_rev[i, mask_end:l] = mask_token_id
-
 
     return noisy_batch, noisy_batch_rev, masked_indices, masked_indices_rev
 
 
 class DLMTrainer(Trainer):
-    """自定义的扩散语言模型训练器"""
     
-    def __init__(self, mask_token_id=126336, **kwargs):
+    def __init__(self, mask_token_id=151666, **kwargs):
         super().__init__(**kwargs)
         self.mask_token_id = mask_token_id
         self.temperature = 0.5
-        self.entropy_weight = 2
-        self.block_size = 32
+        self.entropy_weight = 1
 
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         input_ids = inputs["input_ids"]
         prompt_lengths = inputs["prompt_lengths"]
     
         # Semi-autoregressive forward masking
-        noisy_batch, noisy_batch_rev, masked_indices, masked_indices_rev = forward_process_semi_ar(
-            input_ids, prompt_lengths, self.mask_token_id, self.block_size
+        noisy_batch, noisy_batch_rev, masked_indices, masked_indices_rev= forward_process_semi_ar(
+            input_ids, prompt_lengths, self.mask_token_id
         )
 
+        # token shift
+        masked_indices = masked_indices[:,1:]
+        masked_indices_rev = masked_indices_rev[:,1:]
+        
         # compute logits
         outputs = model(input_ids=noisy_batch)
-        logits = outputs.logits
+        logits = outputs.logits[:,:-1]
 
         # compute logits for complementary mask
         outputs_rev = model(input_ids=noisy_batch_rev)
-        logits_rev = outputs_rev.logits
+        logits_rev = outputs_rev.logits[:,:-1]
 
+        input_ids = input_ids[:,1:]
         # Calculate loss: only calculate loss for masked tokens
         if masked_indices.sum() > 0:
             # Get the logits and labels of the masked positions
@@ -182,7 +171,6 @@ class DLMTrainer(Trainer):
                 masked_labels, 
                 reduction='none'
             ) 
-
             ce_loss = torch.sum(token_loss) / masked_indices.sum()
         else:
             ce_loss = 0.0 * logits.sum()
@@ -200,12 +188,11 @@ class DLMTrainer(Trainer):
                 masked_labels_rev, 
                 reduction='none'
             ) 
-            
             ce_loss_rev = torch.sum(token_loss_rev) / masked_indices_rev.sum()
         else:
             ce_loss_rev = 0.0 * logits_rev.sum()
 
-
+        
         # ---------- Apply entropy loss only to “correctly predicted” tokens ----------
         if masked_indices.sum() > 0:
             # Calculate the probability and entropy of each position
@@ -251,7 +238,6 @@ class DLMTrainer(Trainer):
                 entropy_loss_rev = 0.0 * logits_rev.sum()
         else:
             entropy_loss_rev = 0.0 * logits_rev.sum()
-
         
         # ==================== combined total loss ====================
         total_loss = ce_loss + ce_loss_rev + self.entropy_weight*(entropy_loss + entropy_loss_rev)
@@ -263,7 +249,7 @@ class DLMTrainer(Trainer):
 
 def main():
     # 1. Loading configuration, model and tokenizer
-    config = load_config('configs/config_lora_llada.yaml')
+    config = load_config('configs/config_lora_dream.yaml')
     
     # 2. Setting training parameters
     training_args = TrainingArguments(
@@ -275,8 +261,9 @@ def main():
     
     model, tokenizer = prepare_model(config)
     
+
     # 3. Load the original dataset
-    dataset = load_dataset("Zigeng/dParallel_LLaDA_Distill_Data",split="train")
+    dataset = load_dataset("Zigeng/dParallel_Dream_Distill_Data",split="train")
 
     # 4. Format each sample, generate the complete text and record the number of tokens in the prompt section
     def format_example(example):
@@ -284,12 +271,10 @@ def main():
         prompt_lengths = []
         
         for question, response in zip(example["question"], example["llm_response"]):
-
-            # messages = [{"role": "user", "content": question}]
-            # prompt_text = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
-   
+            
             # prompt text
-            prompt_text = question
+            messages = [{"role": "user", "content": question}]
+            prompt_text = tokenizer.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
             
             # response text
             answer_text = response + tokenizer.eos_token
@@ -334,13 +319,12 @@ def main():
     @dataclass
     class MaskDiffusionDataCollator:
         tokenizer: Any
-        max_length: int = 384  
         
         def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
             input_ids = [torch.tensor(f["input_ids"]) for f in features]
             prompt_lengths = [f["prompt_lengths"] for f in features]
             
-            target_length = self.max_length
+            target_length = 256 + max(prompt_lengths)
             
             pad_token_id = self.tokenizer.eos_token_id
             
@@ -356,7 +340,7 @@ def main():
                         torch.full((padding_length,), pad_token_id, dtype=ids.dtype)
                     ])
                 else:
-                    padded_ids = ids[:target_length]
+                    padded_ids = ids
                 
                 padded_input_ids.append(padded_ids)
             
@@ -369,20 +353,19 @@ def main():
 
     data_collator_fixed = MaskDiffusionDataCollator(
         tokenizer=tokenizer,
-        max_length=384
     )
 
-    # 6. 创建DLM训练器
+    # 6. DLM Trainer
     trainer = DLMTrainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_dataset,
         tokenizer=tokenizer,
-        data_collator=data_collator_fixed,  # 或者使用 data_collator_fixed
-        mask_token_id=126336,  # [MASK] token的ID
+        data_collator=data_collator_fixed, 
+        mask_token_id=151666,  
     )
        
-    # 6. 开始训练
+    # 6. start training
     trainer.train()
 
 if __name__ == "__main__":
