@@ -10,11 +10,11 @@
     <img src="https://img.shields.io/badge/Paper-Arxiv-darkred.svg" alt="Paper">
   </a>
   <a href="https://huggingface.co/Zigeng/dParallel-LLaDA-8B-instruct">
-    <img src="https://img.shields.io/badge/HF-LLaDA Model-FFB000.svg" alt="Project">
+    <img src="https://img.shields.io/badge/HuggingFace-LLaDA Model-FFB000.svg" alt="Project">
   </a>
   </a>
   <a href="https://huggingface.co/Zigeng/dParallel_Dream_7B_Instruct">
-    <img src="https://img.shields.io/badge/HF-Dream Model-FFB000.svg" alt="Project">
+    <img src="https://img.shields.io/badge/HuggingFace-Dream Model-FFB000.svg" alt="Project">
   </a>
 </div>
 </div>
