@@ -16,12 +16,6 @@
   <a href="https://huggingface.co/Zigeng/dParallel_Dream_7B_Instruct">
     <img src="https://img.shields.io/badge/HF-Dream Model-FFB000.svg" alt="Project">
   </a>
-  <a href="https://huggingface.co/datasets/Zigeng/dParallel_LLaDA_Distill_Data">
-    <img src="https://img.shields.io/badge/HF-LLaDA Data-FFB000.svg" alt="Project">
-  </a>
-  <a href="https://huggingface.co/datasets/Zigeng/dParallel_Dream_Distill_Data">
-    <img src="https://img.shields.io/badge/HF-Dream Data-FFB000.svg" alt="Project">
-  </a>
 </div>
 </div>
 
