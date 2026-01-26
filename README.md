@@ -74,6 +74,7 @@ dParallel-Dream-Distill Dataset</a></td>
 </table>
 
 ## 🔥Updates
+* 🔥 **[Jan 26, 2026]**: Our paper is accept by ICLR 2026.
 * 🔥 **[Oct 1, 2025]**: Our arxiv paper is available.
 * 🔥 **[Oct 1, 2025]**: Code, model and dataset are released.
 
