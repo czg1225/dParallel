@@ -174,10 +174,12 @@ Our code builds on [LLaDA](https://github.com/ML-GSAI/LLaDA), [Dream](https://gi
 ## Citation
 If our research assists your work, please give us a star ⭐ or cite us using:
 ```
-@article{chen2025dparallel,
+@inproceedings{
+  chen2025dparallel,
   title={dParallel: Learnable Parallel Decoding for dLLMs},
   author={Chen, Zigeng and Fang, Gongfan and Ma, Xinyin and Yu, Ruonan and Wang, Xinchao},
-  journal={arXiv preprint arXiv:2509.26488},
-  year={2025}
+  booktitle={The Fourteenth International Conference on Learning Representations},
+  year={2026},
+  url={https://openreview.net/forum?id=hVOcstAURb}
 }
 ```
